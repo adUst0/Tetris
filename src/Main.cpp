@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-	Game game(Mode::PLAYER);
+	Game game(GameMode::AI);
 	game.start();
 
 	return 0;

@@ -7,10 +7,10 @@ LIBS = -L./SFML-2.4.2/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-mai
 CC = g++
 CFLAGS = -Wall -std=c++11 $(INC) -mwindows
 
-ODIR = obj
 SDIR = src
+ODIR = obj/$(SDIR)
 
-_OBJ = Game.o Figure.o Board.o GUI.o Main.o
+_OBJ = Game.o Figure.o Board.o GUI.o TetrisAI.o Main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: Tetris
@@ -41,7 +41,7 @@ CC = g++
 CFLAGS = -Wall -std=c++11 $(INC)
 
 ODIR = obj
-SDIR = src
+ODIR = obj/$(SDIR)
 
 _OBJ = Game.o Figure.o Board.o GUI.o Main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))

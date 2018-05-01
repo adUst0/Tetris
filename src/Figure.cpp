@@ -92,6 +92,12 @@ void Figure::rotate(int times) {
 	}
 }
 
+void Figure::setRotation(int rotation) {
+	while(rotation != this->rotation) {
+		rotate();
+	}
+}
+
 bool Figure::isCellEmpty(int i, int j) const {
 	return grid[i][j] == ' ';
 }

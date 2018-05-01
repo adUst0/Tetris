@@ -5,8 +5,6 @@
 //   1   2     3   44   56   77   88 
 //   1   2     3         6   7    8  
 //   1   
-#include <cstring>
-
 static const int FIGURE_ROWS      = 4;
 static const int FIGURE_COLS      = 4;
 static const char FIGURE_FREE_POS = ' ';
@@ -16,6 +14,7 @@ public:
 	Figure(int figureNumber, int rotation);
 
 	void rotate(int times = 1);
+	void setRotation(int rotation);
 	bool isCellEmpty(int i, int j) const;
 	void setCellEmpty(int i, int j);
 	char getFigureNumber() const;

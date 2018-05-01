@@ -7,11 +7,17 @@
 class Board {
 public:
 	Board();
+	Board(const Board& other);
+	Board& operator=(const Board& other) ;
+
 	int getRows() const;
 	int getCols() const;
+	int getColHeight(int colIndex) const;
 
 	bool isCellEmpty(int i, int j) const;
 	void setCellEmpty(int i, int j);
+
+	void reset();
 
 	bool isGameOver() const;
 

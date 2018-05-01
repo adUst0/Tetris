@@ -3,15 +3,16 @@
 #include "Board.h"
 #include "Figure.h"
 #include "GUI.h"
-//#include "TetrisAI.h"
 
-enum Mode { PLAYER = 0, AI = 1 };
+enum GameMode{PLAYER, AI};
 
 class Game
 {
-protected:
+private:
 	Board *board;
-	Mode mode;
+
+	GameMode mode;
+	float waitTime;
 
 	Figure *fallingFigure;
 	int fallingFigureRow;
@@ -19,19 +20,25 @@ protected:
 	Figure *nextFigure;
 
 	GUI gui;
-public:
-	Game(Mode mode = PLAYER);
-	virtual ~Game();
-
-	void start();
-
-	Figure* createNewFigure();
-	void getNewFallingFigure();
 
 	void moveFigureLeft();
 	void moveFigureRight();
 	void moveFigureDown();
 	void rotateFigure();
 
+	void setMode(GameMode mode);
+	bool isPlayerMode() const;
+
+	Figure* createNewFigure();
+	void setNextFigureAsCurrent();
+
+	void handleMoveFigureEvent(sf::Event &event);
+	void handleChangeModeEvent(sf::Event &event);
+
 	void drawScene();
+public:
+	Game(GameMode mode = PLAYER);
+	~Game();
+
+	void start();
 };

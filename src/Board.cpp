@@ -8,11 +8,51 @@ Board::Board() {
 		}
 	}
 }
+
+Board::Board(const Board& other) {
+	for (int i = 0; i < getRows(); i++) {
+		for (int j = 0; j < getCols(); j++) {
+			grid[i][j] = other.grid[i][j];
+		}
+	}
+}
+
+
+Board& Board::operator=(const Board& other) {
+	if(this != &other) {
+		for (int i = 0; i < getRows(); i++) {
+			for (int j = 0; j < getCols(); j++) {
+				grid[i][j] = other.grid[i][j];
+			}
+		}
+	}
+	return *this;
+}
+
+void Board::reset() {
+	for (int i = 0; i < getRows(); i++) {
+		for (int j = 0; j < getCols(); j++) {
+			setCellEmpty(i, j);
+		}
+	}
+}
+
 int Board::getRows() const {
 	return BOARD_ROWS;
 }
 int Board::getCols() const {
 	return BOARD_COLS;
+}
+int Board::getColHeight(int colIndex) const {
+	int colHeight = 0;
+
+	for(int i = getRows() - 1; i >= 0; i--) {
+		if(!isCellEmpty(i, colIndex)) {
+			colHeight = getRows() - i; // height is reversed RowIndex+1;
+		}
+	}
+
+	return colHeight;
 }
 
 bool Board::isCellEmpty(int i, int j) const {
@@ -73,7 +113,7 @@ bool Board::isPossibleMovement(int rowIndex, int colIndex, Figure *fallingFigure
 	}
 
 	for (int i1 = rowIndex, i2 = 0; i1 < rowIndex + FIGURE_ROWS; i1++, i2++) {
-		for (int j1 = colIndex, j2 = 0; j1 < colIndex + FIGURE_ROWS; j1++, j2++) {
+		for (int j1 = colIndex, j2 = 0; j1 < colIndex + FIGURE_COLS; j1++, j2++) {
 
 			// Check if index is out of bounds
 			if (i1 >= getRows() || j1 >= getCols()) {
@@ -95,8 +135,8 @@ bool Board::isPossibleMovement(int rowIndex, int colIndex, Figure *fallingFigure
 }
 
 void Board::putFigure(int rowIndex, int colIndex, Figure *fallingFigure) {
-	for (int i1 = rowIndex, i2 = 0; i1 < rowIndex + FIGURE_ROWS; i1++, i2++) {
-		for (int j1 = colIndex, j2 = 0; j1 < colIndex + FIGURE_COLS; j1++, j2++) {
+	for (int i1 = rowIndex, i2 = 0; i1 < rowIndex + FIGURE_ROWS && i1 < getRows(); i1++, i2++) {
+		for (int j1 = colIndex, j2 = 0; j1 < colIndex + FIGURE_COLS && j1 < getCols(); j1++, j2++) {
 			if (!fallingFigure->isCellEmpty(i2, j2)) {
 				grid[i1][j1] = fallingFigure->getFigureNumber() + '0';
 			}
@@ -105,8 +145,8 @@ void Board::putFigure(int rowIndex, int colIndex, Figure *fallingFigure) {
 }
 
 void Board::removeFigure(int rowIndex, int colIndex, Figure *fallingFigure) {
-	for (int i1 = rowIndex, i2 = 0; i1 < rowIndex + FIGURE_ROWS; i1++, i2++) {
-		for (int j1 = colIndex, j2 = 0; j1 < colIndex + FIGURE_COLS; j1++, j2++) {
+	for (int i1 = rowIndex, i2 = 0; i1 < rowIndex + FIGURE_ROWS && i1 < getRows(); i1++, i2++) {
+		for (int j1 = colIndex, j2 = 0; j1 < colIndex + FIGURE_COLS && j1 < getCols(); j1++, j2++) {
 			if (!fallingFigure->isCellEmpty(i2, j2)) {
 				setCellEmpty(i1, j1);
 			}

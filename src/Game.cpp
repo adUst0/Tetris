@@ -2,12 +2,15 @@
 #include "Board.h"
 #include "Figure.h"
 #include "GUI.h"
+#include "TetrisAI.h"
 #include <SFML/Graphics.hpp>
 
-static const float WAIT_TIME = 0.4;
+static const float WAIT_TIME_AI = 0.05;
+static const float WAIT_TIME_PLAYER = 0.4;
 
-Game::Game(Mode mode) : gui() {
+Game::Game(GameMode mode) : gui() {
 	this->board = new Board();
+	setMode(mode);
 
 	srand(time((time_t*)(0)));
 
@@ -23,9 +26,24 @@ Game::~Game() {
 	delete this->nextFigure;
 }
 
+bool Game::isPlayerMode() const {
+	return this->mode == PLAYER;
+	// else this->mode == AI;
+}
+
+void Game::setMode(GameMode mode) {
+	this->mode = mode;
+	if(mode == PLAYER) {
+		waitTime = WAIT_TIME_PLAYER;
+	}
+	else {
+		waitTime = WAIT_TIME_AI;
+	}
+}
+
 void Game::start() {
 	sf::Clock clock;
-	float timer=0;
+	float timer = 0;
 
 	sf::RenderWindow *window = gui.getPtrToWindow();
 
@@ -41,28 +59,19 @@ void Game::start() {
 			if (event.type == sf::Event::Closed) {
 				window->close();
 			}
+
 			if (event.type == sf::Event::KeyPressed) {
-				switch(event.key.code) {
-					case sf::Keyboard::Up:
-						rotateFigure();
-						break;
-					case sf::Keyboard::Left:
-						moveFigureLeft();
-						break;
-					case sf::Keyboard::Right:
-						moveFigureRight();
-						break;
-					case sf::Keyboard::Down:
-						moveFigureDown();
-						break;
-					default:
-						break;
+
+				if(isPlayerMode()) {
+					handleMoveFigureEvent(event);
 				}
+
+				handleChangeModeEvent(event);
 			}
 		}
 
 		// Move figure down over time
-		if(timer > WAIT_TIME) {
+		if(timer > waitTime) {
 			if (board->isPossibleMovement(fallingFigureRow + 1, fallingFigureCol, fallingFigure)) {
 				fallingFigureRow++;
 			}
@@ -72,12 +81,14 @@ void Game::start() {
 				}
 				board->putFigure(fallingFigureRow, fallingFigureCol, fallingFigure);
 				board->removeFullRows();
-				getNewFallingFigure();
-				this->nextFigure = createNewFigure();
+
+				// Get next figure and generate new next figure
+				setNextFigureAsCurrent();
+				nextFigure = createNewFigure();
 			}
 			timer = 0;
 		}
-	
+
 		drawScene();
 	}
 }
@@ -86,11 +97,18 @@ Figure* Game::createNewFigure() {
 	return new Figure(rand() % 7 + 1, 0);
 }
 
-void Game::getNewFallingFigure() {
-	delete this->fallingFigure;
-	this->fallingFigure = this->nextFigure;
+void Game::setNextFigureAsCurrent() {
+	delete fallingFigure;
+	fallingFigure = nextFigure;
 	fallingFigureRow = 0;
-	fallingFigureCol = 0;
+	if(isPlayerMode()) {
+		fallingFigureCol = 0;
+	}
+	else {
+		std::pair<int, int> bestPosition = TetrisAI::getBestPosition(*board, *fallingFigure);
+		fallingFigure->setRotation(bestPosition.first);
+		fallingFigureCol = bestPosition.second;
+	}
 }
 
 void Game::moveFigureLeft() {
@@ -116,7 +134,7 @@ void Game::rotateFigure() {
 	fallingFigure->rotate();
 	if (!board->isPossibleMovement(fallingFigureRow, fallingFigureCol, fallingFigure)) {
 		fallingFigure->rotate(3);
-	}	
+	}
 }
 
 void Game::drawScene() {
@@ -129,4 +147,31 @@ void Game::drawScene() {
 	gui.drawFigure(15, 7, nextFigure);
 	gui.drawFrame();
 	gui.updateScreen();
+}
+
+void Game::handleMoveFigureEvent(sf::Event &event) {
+
+	if(event.key.code ==  sf::Keyboard::Up) {
+		rotateFigure();	
+	}
+	if(event.key.code ==  sf::Keyboard::Left) {
+		moveFigureLeft();	
+	}
+	if(event.key.code ==  sf::Keyboard::Right) {
+		moveFigureRight();	
+	}
+	if(event.key.code ==  sf::Keyboard::Down) {
+		moveFigureDown();	
+	}
+
+}
+void Game::handleChangeModeEvent(sf::Event &event) {
+	if(event.key.code == sf::Keyboard::X) {
+		if(isPlayerMode()) {
+			setMode(AI);
+		}
+		else {
+			setMode(PLAYER);
+		}
+	}		
 }
