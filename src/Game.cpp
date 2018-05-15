@@ -5,7 +5,7 @@
 #include "TetrisAI.h"
 #include <SFML/Graphics.hpp>
 
-static const float WAIT_TIME_AI = 0.05;
+static const float WAIT_TIME_AI = 0.04;
 static const float WAIT_TIME_PLAYER = 0.4;
 
 Game::Game(GameMode mode) : gui() {
@@ -146,6 +146,7 @@ void Game::drawScene() {
 	}
 	gui.drawFigure(15, 7, nextFigure);
 	gui.drawFrame();
+	gui.drawInstructions();
 	gui.updateScreen();
 }
 

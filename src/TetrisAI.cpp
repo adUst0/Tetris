@@ -3,10 +3,10 @@
 #include "Figure.h"
 #include <utility>
 
-static const float Q_HEIGHT    = -3.1858;
-static const float Q_HOLES     = -4.5257;
-static const float Q_FULL_ROWS = +3.2571;
-static const float Q_BUMPINESS = -1.7885;
+static const float Q_HEIGHT    = -3.2;
+static const float Q_HOLES     = -4.5;
+static const float Q_FULL_ROWS = +3.3;
+static const float Q_BUMPINESS = -1.8;
 
 std::pair<int, int> TetrisAI::getBestPosition(Board &board, Figure &fig) {
 	const int ROTATIONS = 4;

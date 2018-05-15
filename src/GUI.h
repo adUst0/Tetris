@@ -21,6 +21,7 @@ public:
 	void drawFrame();
 	void drawFigure(int posx, int posy, Figure *fig);
 	void drawBoard(Board *board);
+	void drawInstructions();
 	void clearScreen();
 	void updateScreen();
 

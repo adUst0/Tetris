@@ -11,7 +11,7 @@ static const int BOARD_INITIAL_POS_Y = 68;
 static const int WINDOW_WIDTH        = 850;
 static const int WINDOW_HEIGHT       = 816;
 static const std::string PROGRAM_NAME("Tetris");
-static const std::string IMG_FOLDER("img/");
+static const std::string IMG_FOLDER("resources/");
 
 GUI::GUI() 
 	:window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), PROGRAM_NAME) 
@@ -59,6 +59,24 @@ void GUI::drawBoard(Board *board) {
 			}
 		}
 	}
+}
+
+void GUI::drawInstructions() {
+	sf::Font font;
+	font.loadFromFile("resources/sansation.ttf");
+
+	std::string instructions = 
+		std::string("Move: Left/Right arrow\n") +
+		std::string("Slam: Down arrow\n") +
+		std::string("Rotate: Up arrow\n") +
+		std::string("Switch between Single\nplayer or AI: X");
+	
+	sf::Text info(instructions, font);
+	info.setCharacterSize(22);
+	info.setFillColor(sf::Color::Black);
+	info.setPosition(530, 580);
+
+	window.draw(info);
 }
 
 void GUI::clearScreen() {
