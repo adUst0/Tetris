@@ -1,7 +1,7 @@
 INC = -I./SFML-2.4.2/include
 LIBS = -L./SFML-2.4.2/lib -lsfml-graphics -lsfml-window -lsfml-system
 CC = g++
-CFLAGS = -Wall -std=c++11 $(INC)
+CFLAGS = -Wall -std=c++11 $(INC) -static-libgcc -static-libstdc++
 
 SDIR = src
 ODIR = obj/$(SDIR)

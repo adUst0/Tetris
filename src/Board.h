@@ -32,5 +32,4 @@ public:
 	int getFigureNumberAtPos(int i, int j);
 private:
 	char grid[BOARD_ROWS][BOARD_COLS];
-	friend class TetrisAI;
 };
